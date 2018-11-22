@@ -1,0 +1,14 @@
+.obj/*
+.shobj/*
+.depend*
+GNUmakefile*
+*C.cpp
+*C.h
+*C.inl
+*S.h
+*TypeSupport.idl
+*TypeSupportImpl.*
+libDDS*
+roi_generator
+video_capture
+video_roi_display
