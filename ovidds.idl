@@ -1,0 +1,38 @@
+/*
+ *
+ *
+ * Distributed under the OpenDDS License.
+ * See: http://www.opendds.org/license.html
+ */
+
+#include "dds/DdsDcpsCore.idl"
+
+module ovidds {
+
+#pragma DCPS_DATA_TYPE "ovidds::Frame"
+#pragma DCPS_DATA_KEY "ovidds::Frame source_id"
+
+  struct Frame {
+    long source_id;
+    long count;
+    long type;
+    long format;
+    long size_x;
+    long size_y;
+    DDS::OctetSeq data;
+  };
+
+#pragma DCPS_DATA_TYPE "ovidds::ROI"
+#pragma DCPS_DATA_KEY "ovidds::ROI source_id"
+
+  struct ROI {
+    long source_id;
+    long frame_source_id;
+    long count;
+    long type;
+    long off_x;
+    long off_y;
+    long size_x;
+    long size_y;
+  };
+};

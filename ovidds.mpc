@@ -1,0 +1,60 @@
+project(DDS*idl): dcps_test_lib {
+  idlflags      += -Wb,stub_export_include=ovidds_export.h \
+                   -Wb,stub_export_macro=ovidds_Export -SS
+  dcps_ts_flags += -Wb,export_macro=ovidds_Export
+  dynamicflags  += OVIDDS_BUILD_DLL
+
+  TypeSupport_Files {
+    ovidds.idl
+  }
+}
+
+project(DDS*VideoCapture): dcpsexe, dcps_rtps_udp {
+
+  exename   = video_capture
+  after    += DDS*idl
+  libs     += DDS*idl
+  lit_libs += opencv_core opencv_videoio opencv_highgui
+
+  Idl_Files {
+  }
+
+  Source_Files {
+    video_capture.cpp
+    ovidds_common.cpp
+  }
+}
+
+project(DDS*VideoToRoi): dcpsexe, dcps_rtps_udp {
+
+  exename   = roi_generator
+  after    += DDS*idl
+  libs     += DDS*idl
+  lit_libs += opencv_core opencv_imgproc opencv_videoio opencv_highgui opencv_objdetect
+
+  Idl_Files {
+  }
+
+  Source_Files {
+    roi_generator.cpp
+    ovidds_common.cpp
+  }
+}
+
+
+project(DDS*VideoRoiDisplay): dcpsexe, dcps_rtps_udp {
+
+  exename   = video_roi_display
+  after    += DDS*idl
+  libs     += DDS*idl
+  lit_libs += opencv_core opencv_imgproc opencv_highgui 
+
+  Idl_Files {
+  }
+
+  Source_Files {
+    video_roi_display.cpp
+    ovidds_common.cpp
+  }
+}
+
