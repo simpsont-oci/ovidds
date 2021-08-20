@@ -1,4 +1,4 @@
-project(DDS*idl): dcps_test_idl_only_lib {
+project(DDS*idl): dcps_idl_only_lib {
   idlflags      += -Wb,stub_export_include=ovidds_export.h \
                    -Wb,stub_export_macro=ovidds_Export -SS
   dcps_ts_flags += -Wb,export_macro=ovidds_Export
@@ -15,6 +15,7 @@ project(DDS*VideoCapture): dcpsexe, dcps_rtps_udp {
   after    += DDS*idl
   libs     += DDS*idl
   lit_libs += opencv_core opencv_videoio opencv_highgui
+  includes += /usr/include/opencv4/
 
   Idl_Files {
   }
@@ -31,6 +32,7 @@ project(DDS*VideoToRoi): dcpsexe, dcps_rtps_udp {
   after    += DDS*idl
   libs     += DDS*idl
   lit_libs += opencv_core opencv_imgproc opencv_videoio opencv_highgui opencv_objdetect
+  includes += /usr/include/opencv4/
 
   Idl_Files {
   }
@@ -48,6 +50,7 @@ project(DDS*VideoRoiDisplay): dcpsexe, dcps_rtps_udp {
   after    += DDS*idl
   libs     += DDS*idl
   lit_libs += opencv_core opencv_imgproc opencv_highgui 
+  includes += /usr/include/opencv4/
 
   Idl_Files {
   }

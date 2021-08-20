@@ -9,6 +9,8 @@
 #include <dds/DCPS/Service_Participant.h>
 #include <dds/DCPS/Marked_Default_Qos.h>
 #include "dds/DCPS/LocalObject.h"
+#include "dds/DCPS/RTPS/RtpsDiscovery.h"
+#include "dds/DCPS/transport/rtps_udp/RtpsUdp.h"
 
 #include "ovidds_common.h"
 #include "oviddsTypeSupportImpl.h"
@@ -119,8 +121,11 @@ void write_thread(const bool& run, const bool& connected, dw_type& dw, VideoCapt
       frame.size_x = ReferenceFrame.cols;
       frame.size_y = ReferenceFrame.rows;
 
-      frame.data.length(ReferenceFrame.total() * ReferenceFrame.elemSize());
-      std::memcpy(&frame.data[0], ReferenceFrame.datastart, ReferenceFrame.total() * ReferenceFrame.elemSize());
+      const size_t total_bytes = ReferenceFrame.total() * ReferenceFrame.elemSize();
+      frame.data.length(total_bytes);
+      if (total_bytes) {
+        std::memcpy(&frame.data[0], ReferenceFrame.datastart, ReferenceFrame.total() * ReferenceFrame.elemSize());
+      }
 
       if (ReferenceFrame.cols > 3840 || ReferenceFrame.rows > 2160) {
         std::cout << "Frame dimensions of " << ReferenceFrame.cols << " x " << ReferenceFrame.rows << " don't fit within a UHD (3840 x 2160) screen, ignoring." << std::endl;
@@ -225,7 +230,7 @@ int main(int argc, char** argv)
 
   VideoCapture capture;
 
-  capture.open(0);
+  assert(capture.open(0));
 
   if (!capture.isOpened())
   {
@@ -233,6 +238,7 @@ int main(int argc, char** argv)
     return -1;
   }
 
+  /*
   if (!capture.set(CAP_PROP_FRAME_HEIGHT, SizeY))
   {
     std::cerr << "Error: Cannot resize height to " << SizeY << std::endl;
@@ -242,6 +248,7 @@ int main(int argc, char** argv)
   {
     std::cerr << "Error: Cannot resize width to " << SizeX << std::endl;
   }
+  */
 
   /*if (!capture.set(CAP_PROP_MODE, CAP_MODE_YUYV))
   {

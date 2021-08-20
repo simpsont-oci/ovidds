@@ -9,11 +9,9 @@
 
 module ovidds {
 
-#pragma DCPS_DATA_TYPE "ovidds::Frame"
-#pragma DCPS_DATA_KEY "ovidds::Frame source_id"
-
+  @topic
   struct Frame {
-    long source_id;
+    @key long source_id;
     long count;
     long type;
     long format;
@@ -22,11 +20,9 @@ module ovidds {
     DDS::OctetSeq data;
   };
 
-#pragma DCPS_DATA_TYPE "ovidds::ROI"
-#pragma DCPS_DATA_KEY "ovidds::ROI source_id"
-
+  @topic
   struct ROI {
-    long source_id;
+    @key long source_id;
     long frame_source_id;
     long count;
     long type;

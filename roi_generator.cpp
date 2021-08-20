@@ -40,8 +40,8 @@ int main(int , char** )
 
   VideoCapture capture;
   capture.open(0);
-  capture.set(CAP_PROP_FRAME_WIDTH, 1280);
-  capture.set(CAP_PROP_FRAME_HEIGHT, 720);
+  //capture.set(CAP_PROP_FRAME_WIDTH, 1280);
+  //capture.set(CAP_PROP_FRAME_HEIGHT, 720);
 
   if (!capture.isOpened())
   {

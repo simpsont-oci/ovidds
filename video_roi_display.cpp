@@ -11,6 +11,8 @@
 #include <dds/DCPS/Marked_Default_Qos.h>
 #include "dds/DCPS/LocalObject.h"
 #include <dds/DCPS/transport/framework/TransportRegistry.h>
+#include "dds/DCPS/RTPS/RtpsDiscovery.h"
+#include "dds/DCPS/transport/rtps_udp/RtpsUdp.h"
 
 #include "ovidds_common.h"
 #include "oviddsTypeSupportImpl.h"

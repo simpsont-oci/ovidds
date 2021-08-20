@@ -2,7 +2,7 @@
 
 #include <dds/DCPS/transport/framework/TransportRegistry.h>
 
-const long DOMAIN = 0;
+const long DOMAIN = 4;
 const char* FRAME_TOPIC_NAME = "ovidds_frames";
 
 bool is_reliable() {
