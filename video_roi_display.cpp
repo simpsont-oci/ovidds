@@ -102,17 +102,12 @@ public:
       new_frame_ = false;
       if (si_.valid_data)
       {
-        if (mat.type() != frame_.type || mat.cols != frame_.size_x || mat.rows != frame_.size_y)
-        {
-          std::cout << "Resizing output matrix to be " << frame_.size_x << " x " << frame_.size_y << std::endl;
-          mat = Mat(frame_.size_y, frame_.size_x, frame_.type);
-        }
-
         std::stringstream ss;
         ss << "Video Source " << frame_.source_id << std::flush;
 
         name = ss.str();
-        std::memcpy(mat.data, &frame_.data[0], frame_.data.length());
+
+        mat = Mat(frame_.size_y, frame_.size_x, frame_.type, &frame_.data[0]).clone();
         return true;
       }
       return false;
