@@ -70,8 +70,6 @@ private:
 
 void write_thread(const bool& run, const bool& connected, dw_type& dw, VideoCapture& capture)
 {
-  Mat ReferenceFrame;
-
   // Write samples
   ovidds::FrameDataWriter_var frame_dw = ovidds::FrameDataWriter::_narrow(dw.in());
 
@@ -99,33 +97,40 @@ void write_thread(const bool& run, const bool& connected, dw_type& dw, VideoCapt
 
   DDS::InstanceHandle_t handle = frame_dw->register_instance(frame);
   
+  size_t frame_depth = 3;
+  size_t frame_mat_type = 0;
+
   while (run)
   {
     if (connected)
     {
+      const CORBA::Long old_size_x = frame.size_x;
+      const CORBA::Long old_size_y = frame.size_y;
+      frame.size_x = capture.get(CAP_PROP_FRAME_WIDTH);
+      frame.size_y = capture.get(CAP_PROP_FRAME_HEIGHT);
+      if (frame.type == 0 || frame.size_x != old_size_x || frame.size_y != old_size_y) {
+        Mat temp;
+        capture >> temp;
+        frame.type = temp.type();
+        frame_depth = temp.elemSize();
+      }
+
+      const size_t frame_buffer_size = frame.size_x * frame.size_y * frame_depth;
+      if (frame.data.length() != frame_buffer_size) {
+        if (frame.data.length() == 0) {
+          std::cout << "Setting up frame for the first time: " << std::flush;
+        } else {
+          std::cout << "Frame dimensions differ from previous frame, reconfiguring: " << std::flush;
+        }
+        std::cout << "type = " << frame_mat_type << ", width = " << frame.size_x << ", height = " << frame.size_y << ", depth = " << frame_depth << std::endl;
+        frame.data.length(frame_buffer_size);
+      }
+
+      Mat ReferenceFrame(frame.size_y, frame.size_x, frame.type, &frame.data[0]);
+
       capture >> ReferenceFrame;
 
       ++frame.count;
-
-      if (frame.size_x != ReferenceFrame.cols ||
-          frame.size_y != ReferenceFrame.rows ||
-          frame.data.length() != ReferenceFrame.total() * ReferenceFrame.elemSize() ||
-          frame.type != ReferenceFrame.type())
-      {
-        std::cout << "New captured frame of type " << ReferenceFrame.type() << " with size: " << ReferenceFrame.cols << " x " << ReferenceFrame.rows << " and "
-          << ReferenceFrame.channels() << " channels. (element size = " << ReferenceFrame.elemSize() << ")" << std::endl;
-      }
-
-      frame.type = ReferenceFrame.type();
-
-      frame.size_x = ReferenceFrame.cols;
-      frame.size_y = ReferenceFrame.rows;
-
-      const size_t total_bytes = ReferenceFrame.total() * ReferenceFrame.elemSize();
-      frame.data.length(total_bytes);
-      if (total_bytes) {
-        std::memcpy(&frame.data[0], ReferenceFrame.datastart, ReferenceFrame.total() * ReferenceFrame.elemSize());
-      }
 
       if (ReferenceFrame.cols > 3840 || ReferenceFrame.rows > 2160) {
         std::cout << "Frame dimensions of " << ReferenceFrame.cols << " x " << ReferenceFrame.rows << " don't fit within a UHD (3840 x 2160) screen, ignoring." << std::endl;
